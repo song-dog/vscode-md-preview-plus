@@ -324,9 +324,9 @@ function parseTokenForObsidianCalloutAlias(token) {
   let firstLine = lines[0].trim();
   if (!firstLine.startsWith("[!"))
     return;
-  const regexp = /^\[[!](note|abstract|summary|tldr|info|todo|tip|hint|important|success|check|done|question|help|faq|warning|caution|attention|failure|fail|missing|danger|error|bug|example|quote|cite)\]$/;
+  const regexp = /^\[[!](note|abstract|summary|tldr|info|todo|tip|hint|important|success|check|done|question|help|faq|warning|caution|attention|failure|fail|missing|danger|error|bug|example|quote|cite)\](\+|-|)$/;
   const matches = firstLine.toLowerCase().match(regexp);
-  return matches === null ? null : matches[1];
+  return matches === null ? null : { name: matches[1], isCollapsible: matches[2] !== "", initialState: matches[2] === "+" ? "open" : "closed" };
 }
 
 // src/plugins/obsidian-callout/renderer.mjs
@@ -336,10 +336,10 @@ function renderOpening2(obsidianCallout2) {
     const themeKinds = ["light", "dark", "dark", "light"];
     obsidianCallout2.theme = themeKinds[vscode2.window.activeColorTheme.kind];
   }
-  const { name, theme, icon } = obsidianCallout2;
+  const { name, theme, icon, isCollapsible, initialState } = obsidianCallout2;
   return strip_indent_default`
-    <div class="obsidian-callout oc-${name} is-collapsible" theme="${theme}">
-      <label class="oc-heading">
+    <div class="obsidian-callout oc-${name} ${isCollapsible ? "is-collapsible" : ""}" theme="${theme}">
+      <${isCollapsible ? "label" : "div"} class="oc-heading">
         <div class="oc-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="oc-${icon.name}">
             ${icon.components.map((component) => {
@@ -350,13 +350,9 @@ function renderOpening2(obsidianCallout2) {
           </svg>
         </div>
         <div class="oc-title">${toTitleCase(name)}</div>
-        <div class="oc-fold">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-chevron-down">
-            <path d="m6 9 6 6 6-6"/>
-          </svg>
-        </div>
-        <input name="oc-state" type="checkbox" />
-      </label>
+        ${isCollapsible ? '<div class="oc-fold">\n          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-chevron-down">\n            <path d="m6 9 6 6 6-6"/>\n          </svg>\n        </div>' : ""}
+        ${isCollapsible ? '<input name="oc-state" type="checkbox" ' + (initialState === "open" ? "" : "checked") + "/>" : ""}
+      </${isCollapsible ? "label" : "div"}>
       <div class="oc-content">
   `;
 }
@@ -695,8 +691,10 @@ function obsidianCallout(md) {
       const obsidianCalloutAlias = parseTokenForObsidianCalloutAlias(inlineToken);
       if (!obsidianCalloutAlias)
         return result;
-      const obsidianCallout2 = ObsidianCallouts.find((callout) => callout.aliases.includes(obsidianCalloutAlias));
-      obsidianCallout2.name = obsidianCalloutAlias;
+      const obsidianCallout2 = ObsidianCallouts.find((callout) => callout.aliases.includes(obsidianCalloutAlias.name));
+      obsidianCallout2.name = obsidianCalloutAlias.name;
+      obsidianCallout2.isCollapsible = obsidianCalloutAlias.isCollapsible;
+      obsidianCallout2.initialState = obsidianCalloutAlias.initialState;
       inlineToken.content = inlineToken.content.split("\n").slice(1).join("\n");
       tokens[i].meta = { isObsidianCallout: true, obsidianCallout: obsidianCallout2 };
       lastToken.meta = { isObsidianCallout: true };

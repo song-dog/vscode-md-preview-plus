@@ -155,7 +155,7 @@
   }
 
   & .oc-fold {
-    display: flex;
+    display: none;
     align-items: center;
     padding-right: 0.5rem;
 
@@ -163,10 +163,15 @@
       content: '\200B';
     }
 
+    &:is(.is-collapsible > * > &) {
+      display: flex;
+    }
+
     & > svg {
       height: 18px;
       width: 18px;
       transition: transform 100ms ease-in-out;
+      margin-block: 0 -1px;
 
       &:is(:has(:checked) > .oc-fold > &) {
         transform: rotate3d(0, 0, -1, 90deg);

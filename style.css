@@ -1,0 +1,302 @@
+.github-alert {
+  border-left: 0.25em solid var(--border-color);
+  margin-block: 1rem;
+  padding: 0.5rem 1rem;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  & > .ga-title {
+    display: flex;
+    align-items: center;
+    color: var(--title-color);
+    font-weight: bold;
+    line-height: 1;
+    margin-block: 0 0.5em;
+
+    & > svg {
+      display: inline-block;
+      overflow: visible;
+      vertical-align: text-bottom;
+      margin-right: 0.5rem;
+      fill: currentColor;
+    }
+  }
+
+  & > .ga-content {
+    margin-block: 0;
+
+    & > p {
+      margin-block: 0;
+    }
+  }
+
+  &[theme="light"] {
+    color-scheme: light;
+    --border-color: #d0d7de;
+    --title-color: #1f2328;
+
+    &.ga-note {
+      --border-color: #0969da;
+      --title-color: #0969da;
+    }
+
+    &.ga-tip {
+      --border-color: #1a7f37;
+      --title-color: #1a7f37;
+    }
+
+    &.ga-important {
+      --border-color: #8250df;
+      --title-color: #8250df;
+    }
+
+    &.ga-warning {
+      --border-color: #bf8700;
+      --title-color: #9a6700;
+    }
+
+    &.ga-caution {
+      --border-color: #cf222e;
+      --title-color: #d1242f;
+    }
+  }
+
+  &[theme="dark"] {
+    color-scheme: dark;
+    --border-color: #30363d;
+    --title-color: #e6edf3;
+
+    &.ga-note {
+      --border-color: #1f6feb;
+      --title-color: #4493f8;
+    }
+
+    &.ga-tip {
+      --border-color: #238636;
+      --title-color: #3fb950;
+    }
+
+    &.ga-important {
+      --border-color: #8957e5;
+      --title-color: #a371f7;
+    }
+
+    &.ga-warning {
+      --border-color: #9e6a03;
+      --title-color: #d29922;
+    }
+
+    &.ga-caution {
+      --border-color: #da3633;
+      --title-color: #f85149;
+    }
+  }
+}
+
+.obsidian-callout {
+  overflow: hidden;
+  border-style: solid;
+  border-color: rgba(var(--oc-color), 0.25);
+  border-width: 0;
+  border-radius: 4px;
+  margin: 1em 0;
+  mix-blend-mode: var(--oc-blend-mode);
+  user-select: text;
+  background-color: rgba(var(--oc-color), 0.1);
+  padding: 0.75rem 0.75rem 0.75rem 1.5rem;
+
+  & .oc-heading {
+    padding: 0;
+    display: flex;
+    gap: 0.25rem;
+    font-size: inherit;
+    color: rgb(var(--oc-color));
+    line-height: 1.3;
+    align-items: flex-start;
+
+    &:is(.is-collapsible > &) {
+      cursor: default;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    & > input {
+      display: none;
+    }
+  }
+
+  & .oc-icon {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+
+    &::after {
+      content: '\200B';
+    }
+
+    & > svg {
+      color: rgb(var(--oc-color));
+      height: 1em;
+      width: 1em;
+    }
+  }
+
+  & .oc-title {
+    font-weight: bold;
+    color: inherit;
+  }
+
+  & .oc-fold {
+    display: flex;
+    align-items: center;
+    padding-right: 0.5rem;
+
+    &::after {
+      content: '\200B';
+    }
+
+    & > svg {
+      height: 18px;
+      width: 18px;
+      transition: transform 100ms ease-in-out;
+
+      &:is(:has(:checked) > .oc-fold > &) {
+        transform: rotate3d(0, 0, -1, 90deg);
+      }
+    }
+  }
+
+  & .oc-content {
+    overflow: auto hidden;
+    padding: 0;
+    background-color: transparent;
+    transition: all 100ms cubic-bezier(0.02, 0.01, 0.47, 1) 0s;
+    /* height: 56px; */
+
+    &:is(:has(:checked) > &) {
+      height: 0;
+    }
+
+    & > p {
+      margin-block: 0.5rem 0.125rem;
+      overflow-wrap: break-word;
+      line-height: 1.5;
+    }
+  }
+
+  &[theme="light"] {
+    color-scheme: light;
+    --oc-blend-mode: darken;
+
+    &.oc-info,
+    &.oc-todo,
+    &.oc-note,
+    &.oc-custom {
+      --oc-color: 8, 109, 221;
+    }
+  
+    &.oc-abstract,
+    &.oc-summary,
+    &.oc-tldr,
+    &.oc-important,
+    &.oc-tip,
+    &.oc-hint {
+      --oc-color: 0, 191, 188;
+    }
+  
+    &.oc-example {
+      --oc-color: 120, 82, 238;
+    }
+  
+    &.oc-success,
+    &.oc-check,
+    &.oc-done {
+      --oc-color: 8, 185, 78;
+    }
+  
+    &.oc-question,
+    &.oc-help,
+    &.oc-faq,
+    &.oc-warning,
+    &.oc-caution,
+    &.oc-attention {
+      --oc-color: 236, 117, 0;
+    }
+  
+    &.oc-failure,
+    &.oc-fail,
+    &.oc-missing,
+    &.oc-danger,
+    &.oc-error,
+    &.oc-bug {
+      --oc-color: 233, 49, 71;
+    }
+  
+    &.oc-quote,
+    &.oc-cite {
+      --oc-color: 158, 158, 158;
+    }
+  }
+
+  &[theme="dark"] {
+    color-scheme: dark;
+    --oc-blend-mode: lighten;
+
+    &.oc-info,
+    &.oc-todo,
+    &.oc-note,
+    &.oc-custom {
+      --oc-color: 2, 122, 255;
+    }
+  
+    &.oc-abstract,
+    &.oc-summary,
+    &.oc-tldr,
+    &.oc-important,
+    &.oc-tip,
+    &.oc-hint {
+      --oc-color: 83, 223, 221;
+    }
+  
+    &.oc-example {
+      --oc-color: 168, 130, 255;
+    }
+  
+    &.oc-success,
+    &.oc-check,
+    &.oc-done {
+      --oc-color: 68, 207, 110;
+    }
+  
+    &.oc-question,
+    &.oc-help,
+    &.oc-faq,
+    &.oc-warning,
+    &.oc-caution,
+    &.oc-attention {
+      --oc-color: 233, 151, 63;
+    }
+  
+    &.oc-failure,
+    &.oc-fail,
+    &.oc-missing,
+    &.oc-danger,
+    &.oc-error,
+    &.oc-bug {
+      --oc-color: 251, 70, 76;
+    }
+  
+    &.oc-quote,
+    &.oc-cite {
+      --oc-color: 158, 158, 158;
+    }
+  }
+}

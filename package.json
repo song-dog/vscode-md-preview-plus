@@ -1,0 +1,73 @@
+{
+	"version": "0.0.1",
+	"name": "vscode-md-preview-plus",
+	"displayName": "Markdown Preview Plus",
+	"description": "Adds support for additional styled elements from other markdown variants in the native markdown preview.",
+	"publisher": "coyote-studios",
+	"license": "SEE LICENSE IN LICENSE",
+	"icon": "images/icon.webp",
+	"main": "./dist/extension.js",
+	"author": {
+    "name": "coyote",
+    "email": "coyote@coyotestudios.xyz",
+    "url": "https://coyotestudios.xyz"
+  },
+	"galleryBanner": {
+    "color": "#8a5cf5",
+    "theme": "dark"
+  },
+	"engines": {
+		"vscode": "^1.88.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"markdown",
+		"extended",
+		"github",
+		"syntax",
+		"preview"
+	],
+	"type": "commonjs",
+	"homepage": "https://github.com/song-dog/vscode-md-preview-plus/README.md",
+	"bugs": {
+		"url": "https://github.com/song-dog/vscode-md-preview-plus/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/song-dog/vscode-md-preview-plus"
+	},
+	"activationEvents": [],
+	"contributes": {
+		"markdown.markdownItPlugins": true,
+		"markdown.previewStyles": [
+			"./style.css"
+		]
+	},
+	"scripts": {
+		"lint": "eslint src --ext ts",
+		"pretest": "npm run lint",
+		"test": "vscode-test",
+		"vscode:prepublish": "npm run esbuild-base -- --minify",
+		"esbuild-base": "esbuild ./src/extension.mjs --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "format": "prettier --write src/",
+    "test-compile": "tsc -p ./"
+	},
+	"dependencies": {
+		"markdown-it": "^14.1.0"
+	},
+	"devDependencies": {
+		"@types/markdown-it": "^14.1.1",
+		"@types/mocha": "^10.0.6",
+		"@types/node": "^18.19.30",
+		"@types/vscode": "^1.88.0",
+		"@vscode/test-cli": "^0.0.8",
+		"@vscode/test-electron": "^2.3.9",
+		"esbuild": "^0.20.2",
+		"eslint": "^8.57.0",
+		"typescript": "^5.4.4"
+	}
+}

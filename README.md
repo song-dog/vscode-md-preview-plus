@@ -1,32 +1,30 @@
-# Markdown Previews with Github Alert
+# Markdown Preview Plus
 
-This is a VS Code extension that allows you to preview GitHub's alert syntax for markdown files. This feature first introduced in [this discussion post](https://github.com/orgs/community/discussions/16925). And this extension is the first implementation of this feature in VS Code.
+Adds support for additional styled components from Markdown syntaxes not native to VS Code.
 
-Consider the following markdown:
+## Features
 
-```md
-> [!NOTE]
-> Hello, world!
-```
+### GitHub Alerts
 
-What it looks like on Github:
+![GitHub alerts](./images/github-alerts.webp)
 
-![Example](https://github.com/song-dog/vscode-markdown-alert/raw/HEAD/images/example.webp)
+### Obsidian Callouts
 
-What it looks like in VS Code:
+**Standard callout:**
 
-![Example](https://github.com/song-dog/vscode-markdown-alert/raw/HEAD/images/preview.webp)
+![Obsidian callouts](./images/obsidian-callout-note.png)
 
-## How does it work?
+**Foldable callout:**
 
-VS Code uses a javascript library named [markdown-it](https://github.com/markdown-it/markdown-it) to render markdown files. This library allows you to add custom rules to the markdown parser. This extension adds a custom rule to the parser to render GitHub's alert syntax.
+![Foldable obsidian callouts](./images/obsidian-callout-foldable-closed.png)
+![Foldable obsidian callouts](./images/obsidian-callout-foldable-open.png)
 
-## To do
+## To Do
+- custom obsidian callouts
 - task lists
-- obsidian callouts
 - footnotes
 - color codes
 
 ## License
 
-![GNU GPLv3](https://img.shields.io/github/license/song-dog/vscode-markdown-alert?style=for-the-badge)
+![GNU GPLv3](https://img.shields.io/github/license/song-dog/vscode-md-preview-plus?style=for-the-badge)

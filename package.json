@@ -1,27 +1,24 @@
 {
-	"version": "0.0.1",
 	"name": "vscode-md-preview-plus",
 	"displayName": "Markdown Preview Plus",
 	"description": "Adds support for additional styled elements from other markdown variants in the native markdown preview.",
-	"publisher": "coyote-studios",
-	"license": "SEE LICENSE IN LICENSE",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/song-dog/vscode-md-preview-plus"
+	},
 	"icon": "images/icon.webp",
-	"main": "./dist/extension.js",
-	"author": {
-    "name": "coyote",
-    "email": "coyote@coyotestudios.xyz",
-    "url": "https://coyotestudios.xyz"
-  },
-	"galleryBanner": {
-    "color": "#8a5cf5",
-    "theme": "dark"
-  },
+	"version": "0.0.2",
+	"license": "SEE LICENSE IN LICENSE",
 	"engines": {
 		"vscode": "^1.88.0"
 	},
 	"categories": [
 		"Other"
 	],
+	"galleryBanner": {
+    "color": "#8a5cf5",
+    "theme": "dark"
+  },
 	"keywords": [
 		"markdown",
 		"extended",
@@ -29,21 +26,97 @@
 		"syntax",
 		"preview"
 	],
-	"type": "commonjs",
 	"homepage": "https://github.com/song-dog/vscode-md-preview-plus/README.md",
+	"type": "commonjs",
+	"publisher": "coyote-studios",
+	"author": {
+    "name": "coyote",
+    "email": "coyote@coyotestudios.xyz",
+    "url": "https://coyotestudios.xyz"
+  },
 	"bugs": {
 		"url": "https://github.com/song-dog/vscode-md-preview-plus/issues"
 	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/song-dog/vscode-md-preview-plus"
-	},
 	"activationEvents": [],
+	"main": "./dist/extension.js",
+	"badges": [
+    {
+      "url": "https://vsmarketplacebadges.dev/version-short/coyote-studios.vscode-md-preview-plus.svg",
+      "href": "https://marketplace.visualstudio.com/items?itemName=coyote-studios.vscode-md-preview-plus",
+      "description": "Visual Studio Marketplace Version"
+    },
+    {
+      "url": "https://vsmarketplacebadges.dev/installs-short/coyote-studios.vscode-md-preview-plus.svg",
+      "href": "https://marketplace.visualstudio.com/items?itemName=coyote-studios.vscode-md-preview-plus",
+      "description": "Visual Studio Marketplace Installs"
+    },
+    {
+      "url": "https://vsmarketplacebadges.dev/rating-short/coyote-studios.vscode-md-preview-plus.svg",
+      "href": "https://marketplace.visualstudio.com/items?itemName=coyote-studios.vscode-md-preview-plus",
+      "description": "Visual Studio Marketplace Rating"
+    }
+  ],
+	"types": "@types/index.d.ts",
 	"contributes": {
 		"markdown.markdownItPlugins": true,
 		"markdown.previewStyles": [
 			"./style.css"
-		]
+		],
+		"configuration": {
+      "title": "Markdown Preview Plus",
+      "properties": {
+        "markdownPreviewPlus.renderStyle.note": {
+					"type": "string",
+					"markdownDescription": "Rendering style for the 'note' keyword.",
+					"enum": ["GitHub", "Obsidian"],
+					"default": "GitHub",
+					"markdownEnumDescriptions": [
+						"Render notes with GitHub style.",
+						"Render notes with Obsidian style."
+					]
+				},
+				"markdownPreviewPlus.renderStyle.tip": {
+					"type": "string",
+					"markdownDescription": "Rendering style for the 'tip' keyword.",
+					"enum": ["GitHub", "Obsidian"],
+					"default": "GitHub",
+					"markdownEnumDescriptions": [
+						"Render tips with GitHub style.",
+						"Render tips with Obsidian style."
+					]
+				},
+				"markdownPreviewPlus.renderStyle.important": {
+					"type": "string",
+					"markdownDescription": "Rendering style for the 'important' keyword.",
+					"enum": ["GitHub", "Obsidian"],
+					"default": "GitHub",
+					"markdownEnumDescriptions": [
+						"Render importants with GitHub style.",
+						"Render importants with Obsidian style."
+					]
+				},
+				"markdownPreviewPlus.renderStyle.warning": {
+					"type": "string",
+					"markdownDescription": "Rendering style for the 'warning' keyword.",
+					"enum": ["GitHub", "Obsidian"],
+					"default": "GitHub",
+					"markdownEnumDescriptions": [
+						"Render warnings with GitHub style.",
+						"Render warnings with Obsidian style."
+					]
+				},
+				"markdownPreviewPlus.renderStyle.caution": {
+					"type": "string",
+					"markdownDescription": "Rendering style for the 'caution' keyword.",
+					"enum": ["GitHub", "Obsidian"],
+					"default": "GitHub",
+					"markdownEnumDescriptions": [
+						"Render cautions with GitHub style.",
+						"Render cautions with Obsidian style."
+					]
+				}
+			}
+		}
 	},
 	"scripts": {
 		"lint": "eslint src --ext ts",

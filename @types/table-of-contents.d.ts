@@ -2,32 +2,30 @@ declare type MarkdownIt = import('markdown-it/index.js');
 
 declare type Token = import('markdown-it/index.js').Token;
 
-declare type Heading = {
-  level: number;
-  anchor: string;
-  text: string;
-};
+declare type RuleInline = import('markdown-it/index.js').ParserInline.RuleInline;
 
-declare function findHeadlineElements(levels: number[], tokens: Token[], options: any): Heading[];
+declare type RuleBlock = import('markdown-it/index.js').ParserBlock.RuleBlock;
 
-declare function findExistingIdAttr(token: Token): string | void;
+declare type StateInline = import('markdown-it/index.js').StateInline;
 
-declare function getMinLevel(headings: Heading[]): number;
+declare type StateBlock = import('markdown-it/index.js').StateBlock;
 
-declare type TocEntry = {
-  level: number;
-  text: string;
-  anchor: string;
-  children: TocEntry[];
-  parent: TocEntry;
-};
+declare type Slug = {
+  value: string;
+}
 
-declare function addListItem(level: number, text: string, anchor: string, rootNode: TocEntry): TocEntry;
+declare interface slugify {
+  (str: string): Slug;
+}
 
-declare function flatHeadingsToNestedTree(headings: Heading[]): TocEntry;
+declare interface captureHeadings {
+  (state: StateBlock, startLine: number, endLine: number, silent: boolean): boolean;
+}
 
-declare function createTocEntry(tocEntry: TocEntry, options: TocDefaults, md: MarkdownIt): string;
+declare interface toc {
+  (state: StateInline, silent: boolean): boolean;
+}
 
-declare interface TocPlugin {
-  (md: MarkdownIt, options: Partial<TocDefaults>): void;
+declare interface tableOfContents {
+  (md: MarkdownIt): void;
 }

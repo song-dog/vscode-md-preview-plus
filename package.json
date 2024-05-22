@@ -65,6 +65,18 @@
 		"configuration": {
       "title": "Markdown Preview Plus",
       "properties": {
+				"markdownPreviewPlus.highlighter.variant": {
+					"type": "string",
+					"markdownDescription": "Custom highlighting variant to use in the markdown preview. If 'none' is selected, the default highlighting variant will be used.",
+					"enum": ["none", "hl-01", "hl-02", "hl-03"],
+					"default": "none",
+					"markdownEnumDescriptions": [
+						"No custom highlighting.",
+						"Highlighting variant 01.",
+						"Highlighting variant 02.",
+						"Highlighting variant 03."
+					]
+				},
 				"markdownPreviewPlus.footnotes.useHorizonalRule": {
 					"type": "boolean",
 					"markdownDescription": "Use a horizontal rule to separate footnote definitions from the rest of the document. If false, footnote defintions will be separated by a top-border.",

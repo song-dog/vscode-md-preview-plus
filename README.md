@@ -23,8 +23,11 @@ Adds support for additional styled components from Markdown syntaxes not native 
 - custom obsidian callouts
 - task lists
 - footnotes
-- color codes
+- color codes `#0969DA`
 
 ## License
 
 ![GNU GPLv3](https://img.shields.io/github/license/song-dog/vscode-md-preview-plus?style=for-the-badge)
+
+***
+

@@ -65,6 +65,11 @@
 		"configuration": {
       "title": "Markdown Preview Plus",
       "properties": {
+				"markdownPreviewPlus.footnotes.useHorizonalRule": {
+					"type": "boolean",
+					"markdownDescription": "Use a horizontal rule to separate footnote definitions from the rest of the document. If false, footnote defintions will be separated by a top-border.",
+					"default": false
+				},
         "markdownPreviewPlus.renderStyle.note": {
 					"type": "string",
 					"markdownDescription": "Rendering style for the 'note' keyword.",

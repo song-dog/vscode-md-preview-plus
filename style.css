@@ -1,3 +1,7 @@
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+}
+
 .github-alert {
   border-left: 0.25em solid var(--border-color);
   margin-block: 1rem;
@@ -303,5 +307,84 @@
     &.oc-cite {
       --oc-color: 158, 158, 158;
     }
+  }
+}
+
+.footnote {
+  top: -0.5em;
+  margin-inline: 0.2em;
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+
+  & .fn-label {
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+  }
+}
+
+hr {
+  height: 0.25em;
+  background-color: #ffffff2e;
+  border-bottom: 0;
+  border-radius: 2px;
+
+  &:has(+ .footnotes) {
+    height: 0.1em;
+  }
+}
+
+.footnotes {
+  &:not(hr + &) {
+    position: relative;
+    padding-top: 0.6em;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      height: 0.1em;
+      width: 100%;
+      background-color: #ffffff2e;
+      border-radius: 2px;
+    }
+  }
+
+  & .fn-list {
+    padding-left: 1rem;
+    opacity: 0.8;
+  }
+
+  & .fn-label {
+    text-decoration: underline;
+    text-underline-offset: 0.2rem;
+  }
+}
+
+.color-tag {
+  &[theme="light"] {
+    color-scheme: light;
+    --bg-color: #afb8c133;
+    --border-color: #d0d7deb3;
+  }
+
+  &[theme="dark"] {
+    color-scheme: dark;
+    --bg-color: #6e768166;
+    --border-color: #30363db3;
+  }
+
+  padding: 0.2em 0.4em;
+  background-color: var(--bg-color);
+  border-radius: 6px;
+
+  & .color-swatch {
+    display: inline-block;
+    margin-left: 0.25rem;
+    border-radius: 624.9375rem;
+    border: max(1px, 0.0625rem) solid var(--border-color);
+    height: 0.55rem;
+    width: 0.55rem;
   }
 }

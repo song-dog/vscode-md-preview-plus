@@ -21,9 +21,9 @@ Adds support for additional styled components from Markdown syntaxes not native 
 
 ## To Do
 - custom obsidian callouts
+- content tab
+- admonitiom
 - task lists
-- footnotes
-- color codes `#0969DA`
 
 ## License
 

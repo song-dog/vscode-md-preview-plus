@@ -65,6 +65,11 @@
 		"configuration": {
       "title": "Markdown Preview Plus",
       "properties": {
+				"markdownPreviewPlus.highlighter.useHashSyntax": {
+					"type": "boolean",
+					"default": false,
+					"markdownDescription": "Use hash syntax for highlighting code blocks in the markdown preview. If false, the `<mark>` tag will need to be used."
+				},
 				"markdownPreviewPlus.highlighter.variant": {
 					"type": "string",
 					"markdownDescription": "Custom highlighting variant to use in the markdown preview. If 'none' is selected, the default highlighting variant will be used.",

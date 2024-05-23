@@ -33,7 +33,7 @@ __export(extension_exports, {
   deactivate: () => deactivate
 });
 module.exports = __toCommonJS(extension_exports);
-var vscode8 = __toESM(require("vscode"), 1);
+var vscode9 = __toESM(require("vscode"), 1);
 
 // src/plugins/github-alert/renderer.mjs
 var vscode = __toESM(require("vscode"), 1);
@@ -943,84 +943,6 @@ function footnote(md) {
   md.core.ruler.after("inline", "footnote_tail", footnoteTail);
 }
 
-// src/plugins/table-of-contents/plugin.mjs
-var headings = [];
-var slugify = (str) => {
-  const encodedString = encodeURI(
-    str.trim().toLowerCase().replace(/\s+/g, "-").replace(/[\]\[\!\/\'\"\#\$\%\&\(\)\*\+\,\.\/\:\;\<\=\>\?\@\\\^\{\|\}\~\`。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝]/g, "").replace(/^\-+/, "").replace(/\-+$/, "")
-  );
-  return { value: encodedString };
-};
-var slugCount = /* @__PURE__ */ new Map();
-function captureHeadings(state, startLine, endLine, silent) {
-  const tokens = state.tokens;
-  tokens.forEach((token) => {
-    if (token.type === "heading_open") {
-      if (headings.find((heading) => heading.token === token))
-        return;
-      const content = tokens[tokens.indexOf(token) + 1].content;
-      headings.push({ token, content });
-    }
-  });
-  return false;
-}
-function toc(state, silent) {
-  if (state.src.charCodeAt(state.pos) !== 91)
-    return false;
-  if (silent)
-    return false;
-  const match = /^\[\[toc\]\]/im.test(state.src.slice(state.pos));
-  if (!match)
-    return false;
-  state.push("toc_open", "toc", 1);
-  state.push("toc_body", "", 0);
-  state.push("toc_close", "toc", -1);
-  const newline = state.src.indexOf("\n", state.pos);
-  state.pos = newline !== -1 ? newline : state.pos + state.posMax + 1;
-  return true;
-}
-function tableOfContents(md) {
-  md.renderer.rules.toc_open = (tokens, index) => '<div class="table-of-contents">';
-  md.renderer.rules.toc_body = (tokens, index, options, env, self) => {
-    let result = [];
-    let ulStack = [];
-    console.log(headings);
-    headings.forEach((heading) => {
-      const level = parseInt(heading.token.tag.replace(/h/ig, ""));
-      const content = heading.content;
-      let slug = slugify(content);
-      if (slugCount.has(slug.value)) {
-        const existingSlugCount = slugCount.get(slug.value);
-        const currentSlugCount = existingSlugCount + 1;
-        slugCount.set(slug.value, currentSlugCount);
-        slug = slugify(slug.value + "-" + currentSlugCount);
-      } else {
-        slugCount.set(slug.value, 0);
-      }
-      let li = `<li><a href="#${slug.value}">${content}</a></li>`;
-      while (ulStack.length > level) {
-        result.push("</ul>");
-        ulStack.pop();
-      }
-      if (ulStack.length === level) {
-        result.push(li);
-      } else {
-        result.push("<ul>");
-        ulStack.push("<ul>");
-        result.push(li);
-      }
-    });
-    while (ulStack.length) {
-      result.push("</ul>");
-      ulStack.pop();
-    }
-    return result.join("");
-  };
-  md.renderer.rules.toc_close = (tokens, index) => "</div>";
-  md.block.ruler.after("heading", "capture_headings", captureHeadings);
-  md.inline.ruler.push("toc", toc);
-}
-
 // src/plugins/color-tag/plugin.mjs
 var vscode7 = __toESM(require("vscode"), 1);
 function isValidHexColor(str) {
@@ -1046,12 +968,53 @@ function colorTag(md) {
   };
 }
 
+// src/plugins/highlighter/plugin.mjs
+var vscode8 = __toESM(require("vscode"), 1);
+function highlighter(md) {
+  const defaultRenderer = md.renderer.rules.mark_open || function(tokens, idx, options, env, self) {
+    return self.renderToken(tokens, idx, options);
+  };
+  md.renderer.rules.mark_open = function(tokens, idx, options, env, self) {
+    const variant = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter").get("variant");
+    if (variant !== "none") {
+      tokens[idx].attrPush(["class", `highlighter ${variant}`]);
+    }
+    return defaultRenderer(tokens, idx, options, env, self);
+  };
+  md.inline.ruler.before("emphasis", "mark", (state, silent) => {
+    if (silent)
+      return false;
+    const start = state.pos;
+    const marker = state.src.charCodeAt(start);
+    if (marker !== 35)
+      return false;
+    const scanned = state.scanDelims(state.pos, true);
+    let token;
+    if (scanned.length < 2)
+      return false;
+    for (let i = 0; i < scanned.length; i++) {
+      token = state.push("mark_open", "mark", 1);
+      token.markup = "#";
+      token.level = state.level;
+    }
+    token = state.push("text", "", 0);
+    token.content = String.fromCharCode(marker);
+    for (let i = 0; i < scanned.length; i++) {
+      token = state.push("mark_close", "mark", -1);
+      token.markup = "#";
+      token.level = state.level;
+    }
+    state.pos += scanned.length;
+    return true;
+  });
+}
+
 // src/extension.mjs
 function activate(context) {
   context.subscriptions.push(
-    vscode8.workspace.onDidChangeConfiguration((e) => {
+    vscode9.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration("markdownPreviewPlus.renderStyle")) {
-        vscode8.commands.executeCommand("markdown.preview.refresh");
+        vscode9.commands.executeCommand("markdown.preview.refresh");
       }
     })
   );
@@ -1062,7 +1025,7 @@ function activate(context) {
      * @returns {MarkdownIt} - The markdown-it instance with the plugin(s) applied.
      */
     extendMarkdownIt(md) {
-      return md.use(styledBlockquote).use(footnote).use(tableOfContents).use(colorTag);
+      return md.use(styledBlockquote).use(footnote).use(colorTag).use(highlighter);
     }
   };
 }

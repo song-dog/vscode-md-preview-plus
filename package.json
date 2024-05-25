@@ -65,7 +65,12 @@
 		"configuration": {
       "title": "Markdown Preview Plus",
       "properties": {
-				"markdownPreviewPlus.highlighter.useHashSyntax": {
+				"markdownPreviewPlus.taskList.staticCheckboxes": {
+					"type": "boolean",
+					"markdownDescription": "Use static checkboxes in task lists in the markdown preview. If false, checkboxes will respond to user input.",
+					"default": true
+				},
+				"markdownPreviewPlus.highlighter.enableHashSyntax": {
 					"type": "boolean",
 					"default": false,
 					"markdownDescription": "Use hash syntax for highlighting code blocks in the markdown preview. If false, the `<mark>` tag will need to be used."
@@ -82,12 +87,12 @@
 						"Highlighting variant 03."
 					]
 				},
-				"markdownPreviewPlus.footnotes.useHorizonalRule": {
+				"markdownPreviewPlus.footnotes.useHorizontalRule": {
 					"type": "boolean",
 					"markdownDescription": "Use a horizontal rule to separate footnote definitions from the rest of the document. If false, footnote defintions will be separated by a top-border.",
 					"default": false
 				},
-        "markdownPreviewPlus.renderStyle.note": {
+        "markdownPreviewPlus.styledBlockquotes.renderStyle.note": {
 					"type": "string",
 					"markdownDescription": "Rendering style for the 'note' keyword.",
 					"enum": ["GitHub", "Obsidian"],
@@ -97,7 +102,7 @@
 						"Render notes with Obsidian style."
 					]
 				},
-				"markdownPreviewPlus.renderStyle.tip": {
+				"markdownPreviewPlus.styledBlockquotes.renderStyle.tip": {
 					"type": "string",
 					"markdownDescription": "Rendering style for the 'tip' keyword.",
 					"enum": ["GitHub", "Obsidian"],
@@ -107,7 +112,7 @@
 						"Render tips with Obsidian style."
 					]
 				},
-				"markdownPreviewPlus.renderStyle.important": {
+				"markdownPreviewPlus.styledBlockquotes.renderStyle.important": {
 					"type": "string",
 					"markdownDescription": "Rendering style for the 'important' keyword.",
 					"enum": ["GitHub", "Obsidian"],
@@ -117,7 +122,7 @@
 						"Render importants with Obsidian style."
 					]
 				},
-				"markdownPreviewPlus.renderStyle.warning": {
+				"markdownPreviewPlus.styledBlockquotes.renderStyle.warning": {
 					"type": "string",
 					"markdownDescription": "Rendering style for the 'warning' keyword.",
 					"enum": ["GitHub", "Obsidian"],
@@ -127,7 +132,7 @@
 						"Render warnings with Obsidian style."
 					]
 				},
-				"markdownPreviewPlus.renderStyle.caution": {
+				"markdownPreviewPlus.styledBlockquotes.renderStyle.caution": {
 					"type": "string",
 					"markdownDescription": "Rendering style for the 'caution' keyword.",
 					"enum": ["GitHub", "Obsidian"],

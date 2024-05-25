@@ -33,7 +33,7 @@ __export(extension_exports, {
   deactivate: () => deactivate
 });
 module.exports = __toCommonJS(extension_exports);
-var vscode9 = __toESM(require("vscode"), 1);
+var vscode10 = __toESM(require("vscode"), 1);
 
 // src/plugins/github-alert/renderer.mjs
 var vscode = __toESM(require("vscode"), 1);
@@ -198,6 +198,7 @@ function blockquote(state, startLine, endLine, silent) {
   token_c.markup = ">";
   state.lineMax = oldLineMax;
   state.parentType = oldParentType;
+  token_o.map = [startLine, state.line];
   for (let i = 0; i < oldTShift.length; i++) {
     state.bMarks[i + startLine] = oldBMarks[i];
     state.tShift[i + startLine] = oldTShift[i];
@@ -590,7 +591,7 @@ function parseTokenForStyledBlockquote(token) {
   const matches = firstLine.toLowerCase().match(regexp);
   return !matches[1] ? null : {
     name: matches[1],
-    renderStyle: matches[1].match(/(note|important|tip|warning|caution)/) ? vscode5.workspace.getConfiguration("markdownPreviewPlus.renderStyle").get(matches[1]) : "Obsidian",
+    renderStyle: matches[1].match(/(note|important|tip|warning|caution)/) ? vscode5.workspace.getConfiguration("markdownPreviewPlus.styledBlockquote.renderStyle").get(matches[1]) : "Obsidian",
     isCollapsible: matches[2] ? true : false,
     initialState: matches[2] && matches[2] === "-" ? "closed" : "open"
   };
@@ -696,8 +697,8 @@ function renderFootnoteRef(tokens, idx, options, env, self) {
 }
 function renderFootnoteBlockOpen(tokens, idx, options) {
   const footnoteBlockOpen = '<section class="footnotes">\n<ol class="fn-list">\n';
-  const useHorizonalRule = vscode6.workspace.getConfiguration("markdownPreviewPlus.footnotes").get("useHorizontalRule");
-  return useHorizonalRule ? `<hr class="fn-divider"${options.xhtmlOut ? " />" : ">"}
+  const useHorizontalRule = vscode6.workspace.getConfiguration("markdownPreviewPlus.footnotes").get("useHorizontalRule");
+  return useHorizontalRule ? `<hr class="fn-divider"${options.xhtmlOut ? " />" : ">"}
 ${footnoteBlockOpen}` : footnoteBlockOpen;
 }
 function renderFootnoteBlockClose() {
@@ -720,7 +721,7 @@ function renderFootnoteAnchor(tokens, idx, options, env, self) {
 }
 function footnote(md) {
   const parseLinkLabel = md.helpers.parseLinkLabel;
-  const isSpace2 = md.utils.isSpace;
+  const isSpace3 = md.utils.isSpace;
   md.renderer.rules.footnote_ref = renderFootnoteRef;
   md.renderer.rules.footnote_block_open = renderFootnoteBlockOpen;
   md.renderer.rules.footnote_block_close = renderFootnoteBlockClose;
@@ -771,7 +772,7 @@ function footnote(md) {
     let offset = initial;
     while (pos < max) {
       const ch = state.src.charCodeAt(pos);
-      if (!isSpace2(ch))
+      if (!isSpace3(ch))
         break;
       offset += ch === 9 ? 4 - offset % 4 : 1;
       pos++;
@@ -901,34 +902,34 @@ function footnote(md) {
     });
     if (!state.env.footnotes.list)
       return;
-    const list = state.env.footnotes.list;
+    const list2 = state.env.footnotes.list;
     state.tokens.push(new state.Token("footnote_block_open", "", 1));
-    for (let i = 0, l = list.length; i < l; i++) {
+    for (let i = 0, l = list2.length; i < l; i++) {
       const footnoteOpen = new state.Token("footnote_open", "", 1);
-      footnoteOpen.meta = { id: i, label: list[i].label };
+      footnoteOpen.meta = { id: i, label: list2[i].label };
       state.tokens.push(footnoteOpen);
-      if (list[i].tokens) {
+      if (list2[i].tokens) {
         tokens = [];
         const paragraphOpen = new state.Token("paragraph_open", "p", 1);
         paragraphOpen.block = true;
         tokens.push(paragraphOpen);
         const inline = new state.Token("inline", "", 0);
-        inline.children = list[i].tokens;
-        inline.content = list[i].content;
+        inline.children = list2[i].tokens;
+        inline.content = list2[i].content;
         tokens.push(inline);
         const paragraphClose = new state.Token("paragraph_close", "p", -1);
         paragraphClose.block = true;
         tokens.push(paragraphClose);
-      } else if (list[i].label) {
-        tokens = refTokens[`:${list[i].label}`];
+      } else if (list2[i].label) {
+        tokens = refTokens[`:${list2[i].label}`];
       }
       if (tokens)
         state.tokens = state.tokens.concat(tokens);
       const lastParagraph = state.tokens[state.tokens.length - 1].type === "paragraph_close" ? state.tokens.pop() : null;
-      const t = list[i].count > 0 ? list[i].count : 1;
+      const t = list2[i].count > 0 ? list2[i].count : 1;
       for (let j = 0; j < t; j++) {
         const footnoteAnchor = new state.Token("footnote_anchor", "", 0);
-        footnoteAnchor.meta = { id: i, subId: j, label: list[i].label };
+        footnoteAnchor.meta = { id: i, subId: j, label: list2[i].label };
         state.tokens.push(footnoteAnchor);
       }
       if (lastParagraph)
@@ -941,6 +942,86 @@ function footnote(md) {
   md.inline.ruler.after("image", "footnote_inline", footnoteInline);
   md.inline.ruler.after("footnote_inline", "footnote_ref", footnoteRef);
   md.core.ruler.after("inline", "footnote_tail", footnoteTail);
+}
+
+// src/plugins/table-of-contents/plugin.mjs
+var headings = [];
+var slugify = (str) => {
+  const encodedString = encodeURI(
+    str.trim().toLowerCase().replace(/\s+/g, "-").replace(/[\]\[\!\/\'\"\#\$\%\&\(\)\*\+\,\.\/\:\;\<\=\>\?\@\\\^\{\|\}\~\`。，、；：？！…—·ˉ¨‘’“”々～‖∶＂＇｀｜〃〔〕〈〉《》「」『』．〖〗【】（）［］｛｝]/g, "").replace(/^\-+/, "").replace(/\-+$/, "")
+  );
+  return { value: encodedString };
+};
+var slugCount = /* @__PURE__ */ new Map();
+function captureHeadings(state, startLine, endLine, silent) {
+  const tokens = state.tokens;
+  if (headings.length)
+    headings = [];
+  tokens.forEach((token) => {
+    if (token.type === "heading_open") {
+      if (headings.find((heading) => heading.token === token))
+        return false;
+      const content = tokens[tokens.indexOf(token) + 1].content;
+      headings.push({ token, content });
+    }
+  });
+  return false;
+}
+function toc(state, silent) {
+  if (state.src.charCodeAt(state.pos) !== 91)
+    return false;
+  if (silent)
+    return false;
+  const match = /^\[\[toc\]\]/im.test(state.src.slice(state.pos));
+  if (!match)
+    return false;
+  let token = state.push("toc_open", "toc", 1);
+  token.markup = "[[toc]]";
+  token = state.push("toc_body", "", 0);
+  token = state.push("toc_close", "toc", -1);
+  const newline = state.src.indexOf("\n", state.pos);
+  state.pos = newline !== -1 ? newline : state.pos + state.posMax + 1;
+  return true;
+}
+function tableOfContents(md) {
+  md.renderer.rules.toc_open = (tokens, index) => '<div class="table-of-contents">';
+  md.renderer.rules.toc_body = (tokens, index, options, env, self) => {
+    let result = [];
+    let ulStack = [];
+    headings.forEach((heading) => {
+      const level = parseInt(heading.token.tag.replace(/h/ig, ""));
+      const content = heading.content;
+      let slug = slugify(content);
+      if (slugCount.has(slug.value)) {
+        const existingSlugCount = slugCount.get(slug.value);
+        const currentSlugCount = existingSlugCount + 1;
+        slugCount.set(slug.value, currentSlugCount);
+        slug = slugify(slug.value + "-" + currentSlugCount);
+      } else {
+        slugCount.set(slug.value, 0);
+      }
+      let li = `<li><a href="#${slug.value}">${content}</a></li>`;
+      while (ulStack.length > level) {
+        result.push("</ul>");
+        ulStack.pop();
+      }
+      if (ulStack.length === level) {
+        result.push(li);
+      } else {
+        result.push("<ul>");
+        ulStack.push("<ul>");
+        result.push(li);
+      }
+    });
+    while (ulStack.length) {
+      result.push("</ul>");
+      ulStack.pop();
+    }
+    return result.join("");
+  };
+  md.renderer.rules.toc_close = (tokens, index) => "</div>";
+  md.block.ruler.after("heading", "capture_headings", captureHeadings);
+  md.inline.ruler.push("toc", toc);
 }
 
 // src/plugins/color-tag/plugin.mjs
@@ -984,37 +1065,304 @@ function highlighter(md) {
   md.inline.ruler.before("emphasis", "mark", (state, silent) => {
     if (silent)
       return false;
+    const useHashSyntax = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter").get("useHashSyntax");
+    if (!useHashSyntax)
+      return false;
     const start = state.pos;
     const marker = state.src.charCodeAt(start);
     if (marker !== 35)
       return false;
-    const scanned = state.scanDelims(state.pos, true);
-    let token;
-    if (scanned.length < 2)
+    let end = state.pos + 1;
+    while (end < state.src.length && state.src.charCodeAt(end) !== 35) {
+      end++;
+    }
+    if (end >= state.src.length || end === start + 1)
       return false;
-    for (let i = 0; i < scanned.length; i++) {
-      token = state.push("mark_open", "mark", 1);
-      token.markup = "#";
-      token.level = state.level;
-    }
+    if (state.src.charCodeAt(end) !== 35)
+      return false;
+    if (start > 0 && state.src.charCodeAt(start - 1) !== 32 && state.src.charCodeAt(start - 1) !== 10)
+      return false;
+    if (end + 1 < state.src.length && state.src.charCodeAt(end + 1) !== 32 && state.src.charCodeAt(end + 1) !== 10)
+      return false;
+    state.pos = start;
+    let token = state.push("mark_open", "mark", 1);
+    token.markup = "#";
+    token.level = state.level;
+    state.pos = start + 1;
     token = state.push("text", "", 0);
-    token.content = String.fromCharCode(marker);
-    for (let i = 0; i < scanned.length; i++) {
-      token = state.push("mark_close", "mark", -1);
-      token.markup = "#";
-      token.level = state.level;
-    }
-    state.pos += scanned.length;
+    token.content = state.src.slice(start + 1, end);
+    token.level = state.level;
+    state.pos = end;
+    token = state.push("mark_close", "mark", -1);
+    token.markup = "#";
+    token.level = state.level;
+    state.pos = end + 1;
     return true;
   });
+}
+
+// src/plugins/task-list/plugin.mjs
+var vscode9 = __toESM(require("vscode"), 1);
+
+// src/lib/list.mjs
+function isSpace2(code) {
+  return code === 9 || code === 32 ? true : false;
+}
+function skipBulletListMarker(state, startLine) {
+  let pos = state.bMarks[startLine] + state.tShift[startLine];
+  const max = state.eMarks[startLine];
+  const marker = state.src.charCodeAt(pos++);
+  if (marker !== 42 && marker !== 45 && marker !== 43)
+    return -1;
+  if (pos < max && !isSpace2(state.src.charCodeAt(pos)))
+    return -1;
+  return pos;
+}
+function skipOrderedListMarker(state, startLine) {
+  const start = state.bMarks[startLine] + state.tShift[startLine];
+  const max = state.eMarks[startLine];
+  let pos = start;
+  if (pos + 1 >= max)
+    return -1;
+  let ch = state.src.charCodeAt(pos++);
+  if (ch < 48 || ch > 57)
+    return -1;
+  for (; ; ) {
+    if (pos >= max)
+      return -1;
+    ch = state.src.charCodeAt(pos++);
+    if (ch >= 48 && ch <= 57) {
+      if (pos - start >= 10)
+        return -1;
+      continue;
+    }
+    if (ch === 41 || ch === 46)
+      break;
+    return -1;
+  }
+  if (pos < max && !isSpace2(state.src.charCodeAt(pos)))
+    return -1;
+  return pos;
+}
+function markTightParagraphs(state, idx) {
+  const level = state.level + 2;
+  for (let i = idx + 2, l = state.tokens.length - 2; i < l; i++) {
+    if (state.tokens[i].level === level && state.tokens[i].type === "paragraph_open") {
+      state.tokens[i + 2].hidden = true;
+      state.tokens[i].hidden = true;
+      i += 2;
+    }
+  }
+}
+function list(state, startLine, endLine, silent) {
+  let max;
+  let pos;
+  let start;
+  let nextLine = startLine;
+  let tight = true;
+  if (state.sCount[nextLine] - state.blkIndent >= 4)
+    return false;
+  if (state.listIndent >= 0 && state.sCount[nextLine] - state.listIndent >= 4 && state.sCount[nextLine] < state.blkIndent) {
+    return false;
+  }
+  let isTerminatingParagraph = silent && state.parentType === "paragraph" && state.sCount[nextLine] >= state.blkIndent ? true : false;
+  let isOrdered;
+  let markerValue;
+  let posAfterMarker;
+  if ((posAfterMarker = skipOrderedListMarker(state, nextLine)) >= 0) {
+    isOrdered = true;
+    start = state.bMarks[nextLine] + state.tShift[nextLine];
+    markerValue = Number(state.src.slice(start, posAfterMarker - 1));
+    if (isTerminatingParagraph && markerValue !== 1)
+      return false;
+  } else if ((posAfterMarker = skipBulletListMarker(state, nextLine)) >= 0) {
+    isOrdered = false;
+  } else {
+    return false;
+  }
+  if (isTerminatingParagraph && state.skipSpaces(posAfterMarker) >= state.eMarks[nextLine])
+    return false;
+  if (silent)
+    return true;
+  const markerCharCode = state.src.charCodeAt(posAfterMarker - 1);
+  const listTokIdx = state.tokens.length;
+  let token;
+  if (isOrdered) {
+    token = state.push("ordered_list_open", "ol", 1);
+    if (markerValue !== 1) {
+      token.attrs = [["start", String(markerValue)]];
+    }
+  } else {
+    token = state.push("bullet_list_open", "ul", 1);
+  }
+  const listLines = [nextLine, 0];
+  token.map = listLines;
+  token.markup = String.fromCharCode(markerCharCode);
+  let prevEmptyEnd = false;
+  const terminatorRules = state.md.block.ruler.getRules("list");
+  const oldParentType = state.parentType;
+  state.parentType = "list";
+  while (nextLine < endLine) {
+    pos = posAfterMarker;
+    max = state.eMarks[nextLine];
+    const initial = state.sCount[nextLine] + posAfterMarker - (state.bMarks[nextLine] + state.tShift[nextLine]);
+    let offset = initial;
+    while (pos < max) {
+      const ch = state.src.charCodeAt(pos);
+      if (ch !== 9 && ch !== 32)
+        break;
+      if (ch === 9) {
+        offset += 4 - (offset + state.bsCount[nextLine]) % 4;
+      } else if (ch === 32) {
+        offset++;
+      }
+      pos++;
+    }
+    const contentStart = pos;
+    let indentAfterMarker = contentStart >= max ? 1 : offset - initial > 4 ? 1 : offset - initial;
+    const indent = initial + indentAfterMarker;
+    token = state.push("list_item_open", "li", 1);
+    token.markup = String.fromCharCode(markerCharCode);
+    const itemLines = [nextLine, 0];
+    token.map = itemLines;
+    if (isOrdered)
+      token.info = state.src.slice(start, posAfterMarker - 1);
+    const oldTight = state.tight;
+    const oldTShift = state.tShift[nextLine];
+    const oldSCount = state.sCount[nextLine];
+    const oldListIndent = state.listIndent;
+    state.listIndent = state.blkIndent;
+    state.blkIndent = indent;
+    state.tight = true;
+    state.tShift[nextLine] = contentStart - state.bMarks[nextLine];
+    state.sCount[nextLine] = offset;
+    if (contentStart >= max && state.isEmpty(nextLine + 1)) {
+      state.line = Math.min(state.line + 2, endLine);
+    } else {
+      state.md.block.tokenize(state, nextLine, endLine);
+    }
+    if (!state.tight || prevEmptyEnd)
+      tight = false;
+    prevEmptyEnd = state.line - nextLine > 1 && state.isEmpty(state.line - 1);
+    state.blkIndent = state.listIndent;
+    state.listIndent = oldListIndent;
+    state.tShift[nextLine] = oldTShift;
+    state.sCount[nextLine] = oldSCount;
+    state.tight = oldTight;
+    token = state.push("list_item_close", "li", -1);
+    token.markup = String.fromCharCode(markerCharCode);
+    nextLine = state.line;
+    itemLines[1] = nextLine;
+    if (nextLine >= endLine)
+      break;
+    if (state.sCount[nextLine] < state.blkIndent)
+      break;
+    if (state.sCount[nextLine] - state.blkIndent >= 4)
+      break;
+    let terminate = false;
+    for (let i = 0, l = terminatorRules.length; i < l; i++) {
+      if (terminatorRules[i](state, nextLine, endLine, true)) {
+        terminate = true;
+        break;
+      }
+    }
+    if (terminate)
+      break;
+    if (isOrdered) {
+      posAfterMarker = skipOrderedListMarker(state, nextLine);
+      if (posAfterMarker < 0)
+        break;
+      start = state.bMarks[nextLine] + state.tShift[nextLine];
+    } else {
+      posAfterMarker = skipBulletListMarker(state, nextLine);
+      if (posAfterMarker < 0)
+        break;
+    }
+    if (markerCharCode !== state.src.charCodeAt(posAfterMarker - 1))
+      break;
+  }
+  if (isOrdered) {
+    token = state.push("ordered_list_close", "ol", -1);
+  } else {
+    token = state.push("bullet_list_close", "ul", -1);
+  }
+  token.markup = String.fromCharCode(markerCharCode);
+  listLines[1] = nextLine;
+  state.line = nextLine;
+  state.parentType = oldParentType;
+  if (tight)
+    markTightParagraphs(state, listTokIdx);
+  return true;
+}
+
+// src/plugins/task-list/plugin.mjs
+function taskList(md) {
+  md.renderer.rules.task_list_open = function(tokens, idx, options, env, self) {
+    return '<ul class="task-list">';
+  };
+  md.renderer.rules.task_list_item_open = function(tokens, idx, options, env, self) {
+    const checkboxValue = tokens[idx].meta.checkboxValue;
+    const isChecked = checkboxValue.charCodeAt(0) !== 32;
+    const isStrikethrough = checkboxValue === "x";
+    const staticCheckboxes = vscode9.workspace.getConfiguration("markdownPreviewPlus.taskList").get("staticCheckboxes");
+    const checkbox = `<label class="tl-marker${staticCheckboxes ? " is-static" : ""}"><input type="checkbox" class="tl-checkbox" ${isChecked ? "checked" : ""}></label>`;
+    return `<li class="tl-item">${checkbox}<span class="tl-content${isStrikethrough ? " is-strikethrough" : ""}">`;
+  };
+  md.renderer.rules.task_list_item_close = function(tokens, idx, options, env, self) {
+    return "</span></li>";
+  };
+  md.renderer.rules.task_list_close = function(tokens, idx, options, env, self) {
+    return "</ul>";
+  };
+  md.block.ruler.at(
+    "list",
+    (state, startLine, endLine, silent) => {
+      const result = list(state, startLine, endLine, silent);
+      if (!result)
+        return false;
+      const tokens = state.tokens;
+      if (tokens.at(-1).type !== "bullet_list_close")
+        return result;
+      const listOpenIndex = tokens.findLastIndex((token) => token.type === "bullet_list_open");
+      const listOpenToken = tokens[listOpenIndex];
+      const thisListTokens = tokens.slice(listOpenIndex + 1);
+      const listItemOpenTokens = thisListTokens.filter((token) => token.type === "list_item_open");
+      const listItemInlineTokens = thisListTokens.filter((token) => token.type === "inline");
+      const listItemCloseTokens = thisListTokens.filter((token) => token.type === "list_item_close");
+      const listCloseToken = tokens.at(-1);
+      for (let i = 0; i < listItemOpenTokens.length; i++) {
+        const match = listItemInlineTokens[i].content.match(/^\[(.)\]\s(.*)$/);
+        if (!match)
+          continue;
+        const [_, checkboxValue, text] = match;
+        listItemOpenTokens[i].type = "task_list_item_open";
+        listItemOpenTokens[i].meta ??= {};
+        listItemOpenTokens[i].meta.checkboxValue = checkboxValue;
+        listItemInlineTokens[i].content = text;
+        listItemCloseTokens[i].type = "task_list_item_close";
+      }
+      if (listItemOpenTokens.some((token) => token.type === "task_list_item_open")) {
+        listOpenToken.type = "task_list_open";
+        listCloseToken.type = "task_list_close";
+      }
+      return result;
+    },
+    {
+      alt: [
+        "paragraph",
+        "reference",
+        "blockquote"
+      ]
+    }
+  );
 }
 
 // src/extension.mjs
 function activate(context) {
   context.subscriptions.push(
-    vscode9.workspace.onDidChangeConfiguration((e) => {
-      if (e.affectsConfiguration("markdownPreviewPlus.renderStyle")) {
-        vscode9.commands.executeCommand("markdown.preview.refresh");
+    vscode10.workspace.onDidChangeConfiguration((e) => {
+      if (e.affectsConfiguration("markdownPreviewPlus")) {
+        vscode10.commands.executeCommand("markdown.preview.refresh");
       }
     })
   );
@@ -1025,7 +1373,7 @@ function activate(context) {
      * @returns {MarkdownIt} - The markdown-it instance with the plugin(s) applied.
      */
     extendMarkdownIt(md) {
-      return md.use(styledBlockquote).use(footnote).use(colorTag).use(highlighter);
+      return md.use(styledBlockquote).use(footnote).use(tableOfContents).use(colorTag).use(highlighter).use(taskList);
     }
   };
 }

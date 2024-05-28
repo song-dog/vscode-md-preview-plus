@@ -7,7 +7,7 @@
 		"url": "https://github.com/song-dog/vscode-md-preview-plus"
 	},
 	"icon": "images/icon.webp",
-	"version": "0.0.2",
+	"version": "0.0.5",
 	"license": "SEE LICENSE IN LICENSE",
 	"engines": {
 		"vscode": "^1.88.0"

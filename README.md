@@ -19,11 +19,22 @@ Adds support for additional styled components from Markdown syntaxes not native 
 ![Foldable obsidian callouts](./images/obsidian-callout-foldable-closed.png)
 ![Foldable obsidian callouts](./images/obsidian-callout-foldable-open.png)
 
+### Highlighter
+
+### Color Tags
+
+### Footnotes
+
+### Table of Contents
+
+### Task List
+
 ## To Do
+- add missing screenshots
 - custom obsidian callouts
 - content tab
-- admonitiom
-- task lists
+- admonition style callouts
+- refactor the styled blockquotes
 
 ## License
 

@@ -41,4 +41,3 @@ Adds support for additional styled components from Markdown syntaxes not native 
 ![GNU GPLv3](https://img.shields.io/github/license/song-dog/vscode-md-preview-plus?style=for-the-badge)
 
 ***
-

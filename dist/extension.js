@@ -1065,8 +1065,8 @@ function highlighter(md) {
   md.inline.ruler.before("emphasis", "mark", (state, silent) => {
     if (silent)
       return false;
-    const useHashSyntax = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter").get("useHashSyntax");
-    if (!useHashSyntax)
+    const enableHashSyntax = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter").get("enableHashSyntax");
+    if (!enableHashSyntax)
       return false;
     const start = state.pos;
     const marker = state.src.charCodeAt(start);

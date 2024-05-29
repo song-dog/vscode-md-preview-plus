@@ -1056,29 +1056,31 @@ function highlighter(md) {
     return self.renderToken(tokens, idx, options);
   };
   md.renderer.rules.mark_open = function(tokens, idx, options, env, self) {
-    const variant = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter").get("variant");
-    if (variant !== "none") {
-      tokens[idx].attrPush(["class", `highlighter ${variant}`]);
+    const styleVariant = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter").get("styleVariant");
+    if (styleVariant !== "none") {
+      tokens[idx].attrPush(["class", `highlighter ${styleVariant}`]);
     }
     return defaultRenderer(tokens, idx, options, env, self);
   };
   md.inline.ruler.before("emphasis", "mark", (state, silent) => {
     if (silent)
       return false;
-    const enableHashSyntax = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter").get("enableHashSyntax");
-    if (!enableHashSyntax)
+    const config = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter");
+    if (config.get("syntaxVariant") === "<mark>")
       return false;
+    const targetText = config.get("syntaxVariant") === "#" ? "#" : "==";
+    const targetChar = config.get("syntaxVariant") === "#" ? 35 : 61;
     const start = state.pos;
     const marker = state.src.charCodeAt(start);
-    if (marker !== 35)
+    if (marker !== targetChar)
       return false;
     let end = state.pos + 1;
-    while (end < state.src.length && state.src.charCodeAt(end) !== 35) {
+    while (end < state.src.length && state.src.charCodeAt(end) !== targetChar) {
       end++;
     }
-    if (end >= state.src.length || end === start + 1)
+    if (end >= state.src.length || end <= start + 2)
       return false;
-    if (state.src.charCodeAt(end) !== 35)
+    if (state.src.charCodeAt(end) !== targetChar)
       return false;
     if (start > 0 && state.src.charCodeAt(start - 1) !== 32 && state.src.charCodeAt(start - 1) !== 10)
       return false;
@@ -1086,7 +1088,7 @@ function highlighter(md) {
       return false;
     state.pos = start;
     let token = state.push("mark_open", "mark", 1);
-    token.markup = "#";
+    token.markup = targetText;
     token.level = state.level;
     state.pos = start + 1;
     token = state.push("text", "", 0);
@@ -1094,7 +1096,7 @@ function highlighter(md) {
     token.level = state.level;
     state.pos = end;
     token = state.push("mark_close", "mark", -1);
-    token.markup = "#";
+    token.markup = targetText;
     token.level = state.level;
     state.pos = end + 1;
     return true;

@@ -70,12 +70,18 @@
 					"markdownDescription": "Use static checkboxes in task lists in the markdown preview. If false, checkboxes will respond to user input.",
 					"default": true
 				},
-				"markdownPreviewPlus.highlighter.enableHashSyntax": {
-					"type": "boolean",
-					"default": false,
-					"markdownDescription": "Use hash syntax for highlighting code blocks in the markdown preview. If false, the `<mark>` tag will need to be used."
+				"markdownPreviewPlus.highlighter.syntaxVariant": {
+					"type": "string",
+					"markdownDescription": "Syntax variant to use for highlighting code blocks in the markdown preview.",
+					"enum": ["#", "==", "<mark>"],
+					"default": "<mark>",
+					"markdownEnumDescriptions": [
+						"Use hash ('#') syntax for highlighting.",
+						"Use equals ('==') syntax for highlighting.",
+						"Use the `<mark>` tag for highlighting."
+					]
 				},
-				"markdownPreviewPlus.highlighter.variant": {
+				"markdownPreviewPlus.highlighter.styleVariant": {
 					"type": "string",
 					"markdownDescription": "Custom highlighting variant to use in the markdown preview. If 'none' is selected, the default highlighting variant will be used.",
 					"enum": ["none", "hl-01", "hl-02", "hl-03"],

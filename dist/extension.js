@@ -697,7 +697,7 @@ function renderFootnoteRef(tokens, idx, options, env, self) {
 }
 function renderFootnoteBlockOpen(tokens, idx, options) {
   const footnoteBlockOpen = '<section class="footnotes">\n<ol class="fn-list">\n';
-  const useHorizontalRule = vscode6.workspace.getConfiguration("markdownPreviewPlus.footnotes").get("useHorizontalRule");
+  const useHorizontalRule = vscode6.workspace.getConfiguration("markdownPreviewPlus.footnote").get("useHorizontalRule");
   return useHorizontalRule ? `<hr class="fn-divider"${options.xhtmlOut ? " />" : ">"}
 ${footnoteBlockOpen}` : footnoteBlockOpen;
 }
@@ -1065,11 +1065,11 @@ function highlighter(md) {
   md.inline.ruler.before("emphasis", "mark", (state, silent) => {
     if (silent)
       return false;
-    const config = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter");
-    if (config.get("syntaxVariant") === "<mark>")
+    const syntaxVariant = vscode8.workspace.getConfiguration("markdownPreviewPlus.highlighter").get("syntaxVariant");
+    if (syntaxVariant === "<mark>")
       return false;
-    const targetText = config.get("syntaxVariant") === "#" ? "#" : "==";
-    const targetChar = config.get("syntaxVariant") === "#" ? 35 : 61;
+    const targetText = syntaxVariant === "#" ? "#" : "==";
+    const targetChar = syntaxVariant === "#" ? 35 : 61;
     const start = state.pos;
     const marker = state.src.charCodeAt(start);
     if (marker !== targetChar)

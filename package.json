@@ -1,179 +1,182 @@
 {
-	"name": "vscode-md-preview-plus",
-	"displayName": "Markdown Preview Plus",
-	"description": "Adds support for additional styled elements from other markdown variants in the native markdown preview.",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/song-dog/vscode-md-preview-plus"
-	},
-	"icon": "images/icon.webp",
-	"version": "0.0.6",
-	"license": "SEE LICENSE IN LICENSE",
-	"engines": {
-		"vscode": "^1.88.0"
-	},
-	"categories": [
-		"Other"
-	],
-	"galleryBanner": {
-    "color": "#8a5cf5",
-    "theme": "dark"
-  },
-	"keywords": [
-		"markdown",
-		"extended",
-		"github",
-		"syntax",
-		"preview"
-	],
-	"homepage": "https://github.com/song-dog/vscode-md-preview-plus/README.md",
-	"type": "commonjs",
-	"publisher": "coyote-studios",
-	"author": {
-    "name": "coyote",
-    "email": "coyote@coyotestudios.xyz",
-    "url": "https://coyotestudios.xyz"
-  },
-	"bugs": {
-		"url": "https://github.com/song-dog/vscode-md-preview-plus/issues"
-	},
-	"activationEvents": [],
-	"main": "./dist/extension.js",
-	"badges": [
-    {
-      "url": "https://vsmarketplacebadges.dev/version-short/coyote-studios.vscode-md-preview-plus.svg",
-      "href": "https://marketplace.visualstudio.com/items?itemName=coyote-studios.vscode-md-preview-plus",
-      "description": "Visual Studio Marketplace Version"
+    "name": "vscode-md-preview-plus",
+    "displayName": "Markdown Preview Plus",
+    "description": "Adds support for additional styled elements from other markdown variants in the native markdown preview.",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/song-dog/vscode-md-preview-plus"
     },
-    {
-      "url": "https://vsmarketplacebadges.dev/installs-short/coyote-studios.vscode-md-preview-plus.svg",
-      "href": "https://marketplace.visualstudio.com/items?itemName=coyote-studios.vscode-md-preview-plus",
-      "description": "Visual Studio Marketplace Installs"
+    "icon": "images/icon.webp",
+    "version": "0.0.71",
+    "license": "SEE LICENSE IN LICENSE",
+    "engines": {
+        "vscode": "^1.88.0"
     },
-    {
-      "url": "https://vsmarketplacebadges.dev/rating-short/coyote-studios.vscode-md-preview-plus.svg",
-      "href": "https://marketplace.visualstudio.com/items?itemName=coyote-studios.vscode-md-preview-plus",
-      "description": "Visual Studio Marketplace Rating"
+    "categories": [
+        "Other"
+    ],
+    "galleryBanner": {
+        "color": "#8a5cf5",
+        "theme": "dark"
+    },
+    "keywords": [
+        "markdown",
+        "extended",
+        "github",
+        "syntax",
+        "preview"
+    ],
+    "homepage": "https://github.com/song-dog/vscode-md-preview-plus/README.md",
+    "type": "commonjs",
+    "publisher": "coyote-studios",
+    "author": {
+        "name": "coyote",
+        "email": "coyote@coyotestudios.xyz",
+        "url": "https://coyotestudios.xyz"
+    },
+    "bugs": {
+        "url": "https://github.com/song-dog/vscode-md-preview-plus/issues"
+    },
+    "activationEvents": [],
+    "main": "./dist/extension.js",
+    "badges": [
+        {
+            "url": "https://vsmarketplacebadges.dev/version-short/coyote-studios.vscode-md-preview-plus.svg",
+            "href": "https://marketplace.visualstudio.com/items?itemName=coyote-studios.vscode-md-preview-plus",
+            "description": "Visual Studio Marketplace Version"
+        },
+        {
+            "url": "https://vsmarketplacebadges.dev/installs-short/coyote-studios.vscode-md-preview-plus.svg",
+            "href": "https://marketplace.visualstudio.com/items?itemName=coyote-studios.vscode-md-preview-plus",
+            "description": "Visual Studio Marketplace Installs"
+        },
+        {
+            "url": "https://vsmarketplacebadges.dev/rating-short/coyote-studios.vscode-md-preview-plus.svg",
+            "href": "https://marketplace.visualstudio.com/items?itemName=coyote-studios.vscode-md-preview-plus",
+            "description": "Visual Studio Marketplace Rating"
+        }
+    ],
+    "types": "@types/index.d.ts",
+    "contributes": {
+        "markdown.markdownItPlugins": true,
+        "markdown.previewStyles": [
+            "./style.css"
+        ],
+        "configuration": {
+            "title": "Markdown Preview Plus",
+            "properties": {
+                "markdownPreviewPlus.taskList.staticCheckboxes": {
+                    "type": "boolean",
+                    "markdownDescription": "Use static checkboxes in task lists in the markdown preview. If false, checkboxes will respond to user input.",
+                    "default": true
+                },
+                "markdownPreviewPlus.highlighter.syntaxVariant": {
+                    "type": "string",
+                    "markdownDescription": "Syntax variant to use for highlighting code blocks in the markdown preview.",
+                    "enum": ["#", "==", "<mark>"],
+                    "default": "<mark>",
+                    "markdownEnumDescriptions": [
+                        "Use hash ('#') syntax for highlighting.",
+                        "Use equals ('==') syntax for highlighting.",
+                        "Use the `<mark>` tag for highlighting."
+                    ]
+                },
+                "markdownPreviewPlus.highlighter.styleVariant": {
+                    "type": "string",
+                    "markdownDescription": "Custom highlighting variant to use in the markdown preview. If 'none' is selected, the default highlighting variant will be used.",
+                    "enum": ["none", "hl-01", "hl-02", "hl-03"],
+                    "default": "none",
+                    "markdownEnumDescriptions": [
+                        "No custom highlighting.",
+                        "Highlighting variant 01.",
+                        "Highlighting variant 02.",
+                        "Highlighting variant 03."
+                    ]
+                },
+                "markdownPreviewPlus.footnote.useHorizontalRule": {
+                    "type": "boolean",
+                    "markdownDescription": "Use a horizontal rule to separate footnote definitions from the rest of the document. If false, footnote defintions will be separated by a top-border.",
+                    "default": false
+                },
+                "markdownPreviewPlus.styledBlockquote.renderStyle.note": {
+                    "type": "string",
+                    "markdownDescription": "Rendering style for the 'note' keyword.",
+                    "enum": ["GitHub", "Obsidian"],
+                    "default": "GitHub",
+                    "markdownEnumDescriptions": [
+                        "Render notes with GitHub style.",
+                        "Render notes with Obsidian style."
+                    ]
+                },
+                "markdownPreviewPlus.styledBlockquote.renderStyle.tip": {
+                    "type": "string",
+                    "markdownDescription": "Rendering style for the 'tip' keyword.",
+                    "enum": ["GitHub", "Obsidian"],
+                    "default": "GitHub",
+                    "markdownEnumDescriptions": [
+                        "Render tips with GitHub style.",
+                        "Render tips with Obsidian style."
+                    ]
+                },
+                "markdownPreviewPlus.styledBlockquote.renderStyle.important": {
+                    "type": "string",
+                    "markdownDescription": "Rendering style for the 'important' keyword.",
+                    "enum": ["GitHub", "Obsidian"],
+                    "default": "GitHub",
+                    "markdownEnumDescriptions": [
+                        "Render importants with GitHub style.",
+                        "Render importants with Obsidian style."
+                    ]
+                },
+                "markdownPreviewPlus.styledBlockquote.renderStyle.warning": {
+                    "type": "string",
+                    "markdownDescription": "Rendering style for the 'warning' keyword.",
+                    "enum": ["GitHub", "Obsidian"],
+                    "default": "GitHub",
+                    "markdownEnumDescriptions": [
+                        "Render warnings with GitHub style.",
+                        "Render warnings with Obsidian style."
+                    ]
+                },
+                "markdownPreviewPlus.styledBlockquote.renderStyle.caution": {
+                    "type": "string",
+                    "markdownDescription": "Rendering style for the 'caution' keyword.",
+                    "enum": ["GitHub", "Obsidian"],
+                    "default": "GitHub",
+                    "markdownEnumDescriptions": [
+                        "Render cautions with GitHub style.",
+                        "Render cautions with Obsidian style."
+                    ]
+                }
+            }
+        },
+        "markdown.previewScripts": [
+            "./main.js"
+        ]
+    },
+    "scripts": {
+        "lint": "eslint src --ext ts",
+        "pretest": "npm run lint",
+        "test": "vscode-test",
+        "vscode:prepublish": "npm run esbuild-base -- --minify",
+        "esbuild-base": "esbuild ./src/extension.mjs --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+        "esbuild": "npm run esbuild-base",
+        "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+        "format": "prettier --write src/",
+        "test-compile": "tsc -p ./"
+    },
+    "dependencies": {
+        "markdown-it": "^14.1.0"
+    },
+    "devDependencies": {
+        "@types/markdown-it": "^14.1.1",
+        "@types/mocha": "^10.0.6",
+        "@types/node": "^18.19.30",
+        "@types/vscode": "^1.88.0",
+        "@vscode/test-cli": "^0.0.8",
+        "@vscode/test-electron": "^2.3.9",
+        "esbuild": "^0.20.2",
+        "eslint": "^8.57.0",
+        "typescript": "^5.4.4"
     }
-  ],
-	"types": "@types/index.d.ts",
-	"contributes": {
-		"markdown.markdownItPlugins": true,
-		"markdown.previewStyles": [
-			"./style.css"
-		],
-		"configuration": {
-      "title": "Markdown Preview Plus",
-      "properties": {
-				"markdownPreviewPlus.taskList.staticCheckboxes": {
-					"type": "boolean",
-					"markdownDescription": "Use static checkboxes in task lists in the markdown preview. If false, checkboxes will respond to user input.",
-					"default": true
-				},
-				"markdownPreviewPlus.highlighter.syntaxVariant": {
-					"type": "string",
-					"markdownDescription": "Syntax variant to use for highlighting code blocks in the markdown preview.",
-					"enum": ["#", "==", "<mark>"],
-					"default": "<mark>",
-					"markdownEnumDescriptions": [
-						"Use hash ('#') syntax for highlighting.",
-						"Use equals ('==') syntax for highlighting.",
-						"Use the `<mark>` tag for highlighting."
-					]
-				},
-				"markdownPreviewPlus.highlighter.styleVariant": {
-					"type": "string",
-					"markdownDescription": "Custom highlighting variant to use in the markdown preview. If 'none' is selected, the default highlighting variant will be used.",
-					"enum": ["none", "hl-01", "hl-02", "hl-03"],
-					"default": "none",
-					"markdownEnumDescriptions": [
-						"No custom highlighting.",
-						"Highlighting variant 01.",
-						"Highlighting variant 02.",
-						"Highlighting variant 03."
-					]
-				},
-				"markdownPreviewPlus.footnote.useHorizontalRule": {
-					"type": "boolean",
-					"markdownDescription": "Use a horizontal rule to separate footnote definitions from the rest of the document. If false, footnote defintions will be separated by a top-border.",
-					"default": false
-				},
-        "markdownPreviewPlus.styledBlockquote.renderStyle.note": {
-					"type": "string",
-					"markdownDescription": "Rendering style for the 'note' keyword.",
-					"enum": ["GitHub", "Obsidian"],
-					"default": "GitHub",
-					"markdownEnumDescriptions": [
-						"Render notes with GitHub style.",
-						"Render notes with Obsidian style."
-					]
-				},
-				"markdownPreviewPlus.styledBlockquote.renderStyle.tip": {
-					"type": "string",
-					"markdownDescription": "Rendering style for the 'tip' keyword.",
-					"enum": ["GitHub", "Obsidian"],
-					"default": "GitHub",
-					"markdownEnumDescriptions": [
-						"Render tips with GitHub style.",
-						"Render tips with Obsidian style."
-					]
-				},
-				"markdownPreviewPlus.styledBlockquote.renderStyle.important": {
-					"type": "string",
-					"markdownDescription": "Rendering style for the 'important' keyword.",
-					"enum": ["GitHub", "Obsidian"],
-					"default": "GitHub",
-					"markdownEnumDescriptions": [
-						"Render importants with GitHub style.",
-						"Render importants with Obsidian style."
-					]
-				},
-				"markdownPreviewPlus.styledBlockquote.renderStyle.warning": {
-					"type": "string",
-					"markdownDescription": "Rendering style for the 'warning' keyword.",
-					"enum": ["GitHub", "Obsidian"],
-					"default": "GitHub",
-					"markdownEnumDescriptions": [
-						"Render warnings with GitHub style.",
-						"Render warnings with Obsidian style."
-					]
-				},
-				"markdownPreviewPlus.styledBlockquote.renderStyle.caution": {
-					"type": "string",
-					"markdownDescription": "Rendering style for the 'caution' keyword.",
-					"enum": ["GitHub", "Obsidian"],
-					"default": "GitHub",
-					"markdownEnumDescriptions": [
-						"Render cautions with GitHub style.",
-						"Render cautions with Obsidian style."
-					]
-				}
-			}
-		}
-	},
-	"scripts": {
-		"lint": "eslint src --ext ts",
-		"pretest": "npm run lint",
-		"test": "vscode-test",
-		"vscode:prepublish": "npm run esbuild-base -- --minify",
-		"esbuild-base": "esbuild ./src/extension.mjs --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
-    "esbuild": "npm run esbuild-base",
-    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
-    "format": "prettier --write src/",
-    "test-compile": "tsc -p ./"
-	},
-	"dependencies": {
-		"markdown-it": "^14.1.0"
-	},
-	"devDependencies": {
-		"@types/markdown-it": "^14.1.1",
-		"@types/mocha": "^10.0.6",
-		"@types/node": "^18.19.30",
-		"@types/vscode": "^1.88.0",
-		"@vscode/test-cli": "^0.0.8",
-		"@vscode/test-electron": "^2.3.9",
-		"esbuild": "^0.20.2",
-		"eslint": "^8.57.0",
-		"typescript": "^5.4.4"
-	}
 }
